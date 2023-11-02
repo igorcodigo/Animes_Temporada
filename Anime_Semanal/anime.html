@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Anime Schedule</title>
+    <style>
+        table {
+            margin: 0 auto; /* Center the table */
+        }
+        th, td {
+            border: 1px solid #ccc; /* Add border to the cells */
+            padding: 10px;
+            vertical-align: top; /* Align text to the top */
+        }
+        th {
+            background-color: #f2f2f2; /* Add a background color to header */
+        }
+        .remove-anime {
+            cursor: pointer;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Add Anime to Schedule</h2>
+    <form id="animeForm">
+        <label for="animeTitle">Anime Title:</label>
+        <input type="text" id="animeTitle" required>
+        <label for="animeDay">Day:</label>
+        <select id="animeDay">
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
+        </select>
+        <button type="submit">Add Anime</button>
+    </form>
+
+    <h2>Anime Schedule</h2>
+    <table id="animeSchedule">
+        <tr>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+            <th>Sunday</th>
+        </tr>
+        <tr id="scheduleRow">
+            <td id="Monday"></td>
+            <td id="Tuesday"></td>
+            <td id="Wednesday"></td>
+            <td id="Thursday"></td>
+            <td id="Friday"></td>
+            <td id="Saturday"></td>
+            <td id="Sunday"></td>
+        </tr>
+        <!-- Anime schedule will be loaded here -->
+    </table>
+
+    <script>
+        // Function to load schedule from local storage
+        function loadSchedule() {
+            let schedule = JSON.parse(localStorage.getItem('animeSchedule')) || {};
+            Object.keys(schedule).forEach(day => {
+                let cell = document.getElementById(day);
+                cell.innerHTML = ''; // Clear cell
+                schedule[day].forEach((title, index) => {
+                    let animeEntry = document.createElement('div');
+                    animeEntry.textContent = title;
+                    let removeBtn = document.createElement('span');
+                    removeBtn.textContent = '❌';
+                    removeBtn.classList.add('remove-anime');
+                    removeBtn.onclick = function() { removeAnime(day, index); };
+                    animeEntry.appendChild(removeBtn);
+                    cell.appendChild(animeEntry);
+                });
+            });
+        }
+
+        // Function to save schedule to local storage
+        function saveSchedule(title, day) {
+            let schedule = JSON.parse(localStorage.getItem('animeSchedule')) || {};
+            if (!schedule[day]) schedule[day] = [];
+            schedule[day].push(title);
+            localStorage.setItem('animeSchedule', JSON.stringify(schedule));
+        }
+
+        // Function to update the display without reloading
+        function updateDisplay(title, day) {
+            let cell = document.getElementById(day);
+            let animeEntry = document.createElement('div');
+            animeEntry.textContent = title;
+            let removeBtn = document.createElement('span');
+            removeBtn.textContent = '❌';
+            removeBtn.classList.add('remove-anime');
+            removeBtn.onclick = function() { removeAnime(day, cell.childNodes.length); };
+            animeEntry.appendChild(removeBtn);
+            cell.appendChild(animeEntry);
+        }
+
+        // Function to remove an anime from the schedule
+        function removeAnime(day, index) {
+            let schedule = JSON.parse(localStorage.getItem('animeSchedule'));
+            if (schedule && schedule[day]) {
+                schedule[day].splice(index, 1);
+                localStorage.setItem('animeSchedule', JSON.stringify(schedule));
+                loadSchedule(); // Refresh the schedule display
+            }
+        }
+
+        // Event listener for form submission
+        document.getElementById('animeForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            let title = document.getElementById('animeTitle').value;
+            let day = document.getElementById('animeDay').value;
+            saveSchedule(title, day);
+            updateDisplay(title, day);
+            // Clear form inputs after submission
+            document.getElementById('animeTitle').value = '';
+            document.getElementById('animeDay').selectedIndex = 0;
+        });
+
+        // Load schedule when the page is loaded
+        window.onload = loadSchedule;
+    </script>
+</body>
+</html>
