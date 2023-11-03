@@ -6,74 +6,74 @@
     <style>
         
         table {
-            margin: 0 auto; /* Center the table */
+            margin: 0 auto; /* Centraliza a tabela */
         }
         th, td {
-            border: 1px solid #ccc; /* Add border to the cells */
+            border: 1px solid #ccc; /* Adiciona borda às células */
             padding: 10px;
-            vertical-align: top; /* Align text to the top */
+            vertical-align: top; /* Alinha o texto ao topo */
         }
         th {
-            background-color: #f2f2f2; /* Add a background color to header */
+            background-color: #f2f2f2; /* Adiciona uma cor de fundo ao cabeçalho */
         }
         .remove-anime {
             cursor: pointer;
             margin-left: 5px;
         }
         #animeSchedule {
-            margin: 0 auto; /* Center the table */
-            overflow-x: auto; /* Add horizontal scrolling for overflow */
+            margin: 0 auto; /* Centraliza a tabela */
+            overflow-x: auto; /* Adiciona rolagem horizontal em caso de overflow */
         }
     </style>
 </head>
 <body>
-    <h2>Add Anime to Schedule</h2>
+    <h2>Adicionar Anime à Agenda</h2>
     <form id="animeForm">
-        <label for="animeTitle">Anime Title:</label>
+        <label for="animeTitle">Título do Anime:</label>
         <input type="text" id="animeTitle" required>
-        <label for="animeDay">Day:</label>
+        <label for="animeDay">Dia:</label>
         <select id="animeDay">
-            <option value="Monday">Monday</option>
-            <option value="Tuesday">Tuesday</option>
-            <option value="Wednesday">Wednesday</option>
-            <option value="Thursday">Thursday</option>
-            <option value="Friday">Friday</option>
-            <option value="Saturday">Saturday</option>
-            <option value="Sunday">Sunday</option>
+            <option value="Segunda">Segunda</option>
+            <option value="Terça">Terça</option>
+            <option value="Quarta">Quarta</option>
+            <option value="Quinta">Quinta</option>
+            <option value="Sexta">Sexta</option>
+            <option value="Sábado">Sábado</option>
+            <option value="Domingo">Domingo</option>
         </select>
-        <button type="submit">Add Anime</button>
+        <button type="submit">Adicionar Anime</button>
     </form>
 
-    <h2>Anime Schedule</h2>
+    <h2>Agenda de Anime</h2>
     <table id="animeSchedule">
         <tr>
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>Wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-            <th>Saturday</th>
-            <th>Sunday</th>
+            <th>Segunda</th>
+            <th>Terça</th>
+            <th>Quarta</th>
+            <th>Quinta</th>
+            <th>Sexta</th>
+            <th>Sábado</th>
+            <th>Domingo</th>
         </tr>
         <tr id="scheduleRow">
-            <td id="Monday"></td>
-            <td id="Tuesday"></td>
-            <td id="Wednesday"></td>
-            <td id="Thursday"></td>
-            <td id="Friday"></td>
-            <td id="Saturday"></td>
-            <td id="Sunday"></td>
+            <td id="Segunda"></td>
+            <td id="Terça"></td>
+            <td id="Quarta"></td>
+            <td id="Quinta"></td>
+            <td id="Sexta"></td>
+            <td id="Sábado"></td>
+            <td id="Domingo"></td>
         </tr>
-        <!-- Anime schedule will be loaded here -->
+        <!-- A programação do anime será carregada aqui -->
     </table>
 
     <script>
-        // Function to load schedule from local storage
+        // Função para carregar a agenda do armazenamento local
         function loadSchedule() {
             let schedule = JSON.parse(localStorage.getItem('animeSchedule')) || {};
             Object.keys(schedule).forEach(day => {
                 let cell = document.getElementById(day);
-                cell.innerHTML = ''; // Clear cell
+                cell.innerHTML = ''; // Limpa a célula
                 schedule[day].forEach((title, index) => {
                     let animeEntry = document.createElement('div');
                     animeEntry.textContent = title;
@@ -87,7 +87,7 @@
             });
         }
 
-        // Function to save schedule to local storage
+        // Função para salvar a agenda no armazenamento local
         function saveSchedule(title, day) {
             let schedule = JSON.parse(localStorage.getItem('animeSchedule')) || {};
             if (!schedule[day]) schedule[day] = [];
@@ -95,7 +95,7 @@
             localStorage.setItem('animeSchedule', JSON.stringify(schedule));
         }
 
-        // Function to update the display without reloading
+        // Função para atualizar a exibição sem recarregar
         function updateDisplay(title, day) {
             let cell = document.getElementById(day);
             let animeEntry = document.createElement('div');
@@ -108,29 +108,29 @@
             cell.appendChild(animeEntry);
         }
 
-        // Function to remove an anime from the schedule
+        // Função para remover um anime da agenda
         function removeAnime(day, index) {
             let schedule = JSON.parse(localStorage.getItem('animeSchedule'));
             if (schedule && schedule[day]) {
                 schedule[day].splice(index, 1);
                 localStorage.setItem('animeSchedule', JSON.stringify(schedule));
-                loadSchedule(); // Refresh the schedule display
+                loadSchedule(); // Atualiza a exibição da agenda
             }
         }
 
-        // Event listener for form submission
+        // Ouvinte de evento para envio de formulário
         document.getElementById('animeForm').addEventListener('submit', function (e) {
             e.preventDefault();
             let title = document.getElementById('animeTitle').value;
             let day = document.getElementById('animeDay').value;
             saveSchedule(title, day);
             updateDisplay(title, day);
-            // Clear form inputs after submission
+            // Limpa os campos do formulário após o envio
             document.getElementById('animeTitle').value = '';
             document.getElementById('animeDay').selectedIndex = 0;
         });
 
-        // Load schedule when the page is loaded
+        // Carrega a agenda quando a página é carregada
         window.onload = loadSchedule;
     </script>
 </body>
