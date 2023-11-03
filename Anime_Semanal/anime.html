@@ -24,6 +24,18 @@
             margin: 0 auto; /* Centraliza a tabela */
             overflow-x: auto; /* Adiciona rolagem horizontal em caso de overflow */
         }
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 5px 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -41,7 +53,7 @@
             <option value="Sábado">Sábado</option>
             <option value="Domingo">Domingo</option>
         </select>
-        <button type="submit">Adicionar Anime</button>
+        <button class="btn" type="submit">Adicionar Anime</button>
     </form>
 
     <h2>Agenda de Anime</h2>
@@ -64,16 +76,15 @@
             <td id="Sábado"></td>
             <td id="Domingo"></td>
         </tr>
-        <!-- A programação do anime será carregada aqui -->
     </table>
 
     <script>
-        // Função para carregar a agenda do armazenamento local
+        // Função carregar a agenda do armazenamento local
         function loadSchedule() {
             let schedule = JSON.parse(localStorage.getItem('animeSchedule')) || {};
             Object.keys(schedule).forEach(day => {
                 let cell = document.getElementById(day);
-                cell.innerHTML = ''; // Limpa a célula
+                cell.innerHTML = '';
                 schedule[day].forEach((title, index) => {
                     let animeEntry = document.createElement('div');
                     animeEntry.textContent = title;
@@ -87,7 +98,7 @@
             });
         }
 
-        // Função para salvar a agenda no armazenamento local
+        // Função salvar a agenda no armazenamento local
         function saveSchedule(title, day) {
             let schedule = JSON.parse(localStorage.getItem('animeSchedule')) || {};
             if (!schedule[day]) schedule[day] = [];
@@ -95,7 +106,7 @@
             localStorage.setItem('animeSchedule', JSON.stringify(schedule));
         }
 
-        // Função para atualizar a exibição sem recarregar
+        // Função atualizar a exibição sem recarregar
         function updateDisplay(title, day) {
             let cell = document.getElementById(day);
             let animeEntry = document.createElement('div');
@@ -108,17 +119,17 @@
             cell.appendChild(animeEntry);
         }
 
-        // Função para remover um anime da agenda
+        // Função remover um anime 
         function removeAnime(day, index) {
             let schedule = JSON.parse(localStorage.getItem('animeSchedule'));
             if (schedule && schedule[day]) {
                 schedule[day].splice(index, 1);
                 localStorage.setItem('animeSchedule', JSON.stringify(schedule));
-                loadSchedule(); // Atualiza a exibição da agenda
+                loadSchedule(); 
             }
         }
 
-        // Ouvinte de evento para envio de formulário
+        // Função envio de formulário
         document.getElementById('animeForm').addEventListener('submit', function (e) {
             e.preventDefault();
             let title = document.getElementById('animeTitle').value;
@@ -130,7 +141,7 @@
             document.getElementById('animeDay').selectedIndex = 0;
         });
 
-        // Carrega a agenda quando a página é carregada
+        
         window.onload = loadSchedule;
     </script>
 </body>
